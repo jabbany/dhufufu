@@ -1,0 +1,217 @@
+地址解析正则
+http://acg\.tv/av([0-9]+)(?:,([0-9]+))?
+http://www\.bilibili\.tv/video\/av([0-9]+)(?:index_([0-9]+)\.html)?
+	$1	AID号
+	$2	页数
+
+===================================================================================
+读取视频信息API
+http://api.bilibili.tv/view?type=<类型>&appkey=<appkey>&id=<ID号>&page=<页数>
+
+参数:
+	type: 可选xml/json
+	id: aid号
+	page: page号
+	appkey		输入获得的APPKey
+
+返回内容:
+	play		播放次数
+	review		评论数
+	video_review	弹幕数
+	favorites	收藏
+	title		标题
+	description	描述
+	tag		关键字
+	pic		封面
+	pages		页数
+	from		视频来源
+	author		作者
+	mid			作者mid
+	cid			视频源及弹幕编号 弹幕地址 http://comment.bilibili.tv/<cid>.xml
+	offsite		Flash播放调用地址（如果沒有则此视频无法在站外播放）
+
+===================================================================================
+视频地址获取
+http://interface.bilibili.tv/playurl?otype=<类型>&cid=<CID>&type=<视频类型>
+
+参数:
+	otype: 可选xml/json 默认XML
+	type: 可选flv/mp4 MP4为低质量 移动设备格式 建议使用FLV
+	cid: API中提供的CID号
+
+===================================================================================
+搜索视频API
+http://api.bilibili.tv/search?type=<类型>&appkey=<appkey>&keyword=<关键字>&page=<页数>&order=<排序方式>
+
+参数:
+	type: 可选xml/json
+	keyword: 搜索关键字
+	page: page号
+	appkey		输入获得的APPKey
+	order
+		default		综合排序
+		pubdate		按发布日期排序
+		senddate	按修改日期排序
+		id			按编号排序
+		ranklevel	按相关度排序
+		click		按点击排序
+		scores		按评论数排序
+		damku		按弹幕数排序
+		stow		按收藏数排序
+
+返回内容:
+	type		mylist/video  我的列表或视频
+	aid			视频编号
+	lid			我的列表编号
+	author		作者
+	mid			作者mid
+	play		播放次数
+	review		评论数
+	video_review	弹幕数
+	favorites	收藏
+	title		标题
+	description	描述
+	tag		关键字
+	pic		封面
+
+===================================================================================
+读取视频评论
+http://api.bilibili.tv/feedback?type=<类型>&appkey=<appkey>&aid=<ID号>&page=<页数>
+
+参数:
+	type	可选xml/json
+	aid		aid号
+	page	页数
+	pagesize	可选 1-300	默认: 10
+	appkey		输入获得的APPKey
+
+===================================================================================
+读取视频排行信息
+http://api.bilibili.tv/list?type=<类型>&appkey=<appkey>&tid=<分类号>&page=<页数>&pagesize=<分页大小>&order=<排序方式>[&click_detail=<详细点击信息>]
+
+参数:
+	type		可选xml/json
+	tid			分类编号	new排序为必填 其他为可选
+	page		页数
+	pagesize	每页返回数量
+	appkey		输入获得的APPKey
+	pinyin		在使用拼音排序时必填选项 拼音首字母
+	click_detail		可选 是否返回详细点击信息
+	access_key	可选 填入读取用户登陆信息中获得的access_key可以获取用户所发布的文档
+	order
+		default	按新投稿排序
+		new		按新评论排序
+		review	按评论数排序
+		hot		按热门程度排序
+		damku	按弹幕数排序
+		comment	按推荐数排序
+		promote	按宣传数排序（硬币）
+		pinyin	按标题拼音排序
+
+===================================================================================
+读取专题信息
+http://api.bilibili.tv/sp?type=<类型>&appkey=<appkey>&spid=<专题号>&title=<专题标题>
+
+参数:
+	type		可选xml/json
+	spid		专题编号
+	title		专题标题
+	appkey		输入获得的APPKey
+
+===================================================================================
+读取番剧专题信息
+http://api.bilibili.tv/bangumi?type=<类型>&appkey=<appkey>&btype=<番剧类型>&weekday=<周>
+
+参数:
+	type		可选xml/json
+	appkey		输入获得的APPKey
+	btype		番剧类型 2: 二次元新番 3: 三次元新番 默认：所有
+	weekday		周一:1 周二:2 ... 周日:0
+
+===================================================================================
+读取TAG信息
+http://api.bilibili.tv/tags?type=<类型>&appkey=<appkey>&tid=<分类号>&page=<页数>&pagesize=<分页大小>&order=<排序方式>&tags=<TAG名字>
+
+参数:
+	type		可选xml/json
+	tid			分类编号	new排序为必填 其他为可选
+	page		页数
+	tags		TAG名字
+	pagesize	每页返回数量
+	appkey		输入获得的APPKey
+	access_key	可选 填入读取用户登陆信息中获得的access_key可以获取用户所发布的文档
+	order
+		default	按新投稿排序
+		new		按新评论排序
+		review	按评论数排序
+		hot		按热门程度排序
+		damku	按弹幕数排序
+		comment	按推荐数排序
+		promote	按宣传数排序（硬币）
+
+===================================================================================
+读取用户登陆信息
+登陆连接: https://secure.bilibili.tv/login?api=<API地址>&hash=<Public Key>
+
+参数:
+	api			申请时填入的API地址
+	hash		申请时系统提供的Key
+	ver			API版本
+
+回调API
+	mid			会员编号
+	uname		UTF-8编码 用户暱称
+	pic			头像 *不允许直接连接 需要在服务器下载到本地
+	rank		用户等级编码
+	access_key	用户访问授权密钥
+	hash		校验码
+					v1 计算方法 API:<uname内容>:<rank>:<appkey>
+					v2 计算方法 API:<mid>:<rank>:<appkey>
+
+===================================================================================
+读取用户收藏
+http://api.bilibili.tv/favourite?type=<类型>&appkey=<appkey>&page=<页数>&pagesize=<分页大小>
+
+参数:
+	type	可选xml/json
+	appkey		输入获得的APPKey
+	page	页数
+	pagesize	可选 1-300	默认: 10
+
+===================================================================================
+添加用户收藏
+http://api.bilibili.tv/favourite?type=<类型>&appkey=<appkey>&act=add&id=<aid>
+
+参数:
+	type	可选xml/json
+	appkey		输入获得的APPKey
+	aid		AID
+
+===================================================================================
+删除用户收藏
+http://api.bilibili.tv/favourite?type=<类型>&appkey=<appkey>&act=del&id=<aid>
+
+参数:
+	type	可选xml/json
+	appkey		输入获得的APPKey
+	aid		AID
+
+===================================================================================
+特别推荐列表
+http://api.bilibili.tv/recommend?type=<类型>&appkey=<appkey>&page=<页数>&pagesize=<分页大小>&order=<排序方式>[&tid=<分类号>]
+
+参数:
+	type	可选xml/json
+	appkey		输入获得的APPKey
+	page	页数
+	pagesize	每页返回数量 可选 1-300	默认: 10
+	tid			分类编号	可选
+	order
+		default	按特别推荐数量排序
+		new		按新评论排序
+		review	按评论数排序
+		hot		按热门程度排序
+		damku	按弹幕数排序
+		comment	按用户推荐数排序
+		promote	按宣传数排序（硬币）
+		pinyin	按标题拼音排序
