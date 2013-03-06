@@ -40,7 +40,7 @@
 	
 拆解onAir得到的API
 ----
-[注意！] 根地址：api.bangumi.tv
+[注意！] 根地址：api.bgm.tv
 
 ！新年福利！
 
