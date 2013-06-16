@@ -92,9 +92,11 @@
 	
 3.获取目前追番信息：
 !(需要认证信息
-[GET] /user/{$UID}/collection&cat=watching
+[GET] /user/{$UID/USERNAME}/collection?cat=watching
 	获取时需要提供cat字段，目前理解为追番信息的分类，这个字段现在填写任何非空字符串都会给出同样的结果
 	默认客户端采用 "watching" 暂时是API断头。
+	
+	此处使用{$USERNAME}也能正确返回信息
 	
 	[返回信息]
 	格式：JSON
