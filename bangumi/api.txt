@@ -56,12 +56,14 @@
 [GET字段]
 	sysusername={$UID} (Optional)
 	sysuid={$UID} (Optional)
-	source={$APP_NAME} (Optional)
+	source={$APP_NAME} 
 	auth={$AUTH_TOKEN}
 	
 	{$UID} = 番组计划的UID，个人空间显示的数字
 	{$APP_NAME} = 你的App的一个标识，貌似现在BGM只有 onAir不过其他的字符串也不会导致出错
 	{$AUTH_TOKEN} = 认证标签
+
+注意，source现在是必选项了。
 
 2.获取认证：
 [POST] /auth
