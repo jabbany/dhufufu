@@ -48,8 +48,12 @@
 	[HTTP头]
 	Referer: app:/onAir.swf (Optional)
 	
+	[HTTP Cookie]
+	chii_sid: session ID，每次请求后会有set-cookie字段给出
+	__cfduid: 未知，不影响请求，auth后会得到
+	
 	[HTTP GET]
-	?rand={随机数} (Optional)
+	rand={随机数} (Optional)
 
 1.认证API:
 每个认证的请求中必须传递这些参数！
@@ -63,7 +67,7 @@
 	{$APP_NAME} = 你的App的一个标识，貌似现在BGM只有 onAir不过其他的字符串也不会导致出错
 	{$AUTH_TOKEN} = 认证标签
 
-注意，source现在是必选项了。
+注意，source现在是必选项了，而且有一些条目需要强制 source 是 onAir，下面会有说明。
 
 2.获取认证：
 [POST] /auth
@@ -139,10 +143,12 @@
 	]
 
 4. 获取追番进度信息
+!(需要认证信息
 获取某一个番所有集数的信息，以及用户的追番信息。
-[GET] /user/{$UID}/progress?subject_id={$ID}
+[GET] /user/{$UID}/progress?subject_id={$ID}&source=onAir
 	{$UID} = 用户ID
 	{$ID} = 番组ID
+	{$APP_NAME} = onAir ！注意此处必须使用onAir否则会返回 Unauthorized 错误！
 	
 	[返回信息]
 	格式：JSON
@@ -167,9 +173,12 @@
 	}
 	
 5.获取番组信息
-[GET] /subject/{$ID}
+[GET] /subject/{$ID}?responseGroup={$RGP}
 	{$ID} = 番组ID，见上面
-	
+	{$RGP} = 返回详细程度
+		"simple" : (Default) 比较简略
+		"large" : 详细
+
 	[返回信息]
 	格式： JSON
 	{
@@ -178,104 +187,125 @@
 		type: 番组类型（2为二次元番？期刊？未研究）
 		name: 名称（原）
 		name_cn: 名称（中）
-		eps: [
-			{
-				id: 集ID
-				url: 集URL
-				type: 类型（目前只见到过0）
-				sort: 集编号（序号，对应第N集，以1开始）
-				name: 该集名称（原）
-				name_cn: 该集名称（中）
-				duration: 时长（字符串，格式：MM:ss）
-				airdate: 放送日
-				comment: 评论数
-				desc: 介绍
-				status: 放映状况
-					Air - 已放送
-					NA - 未放送
-					Today - 正在放送
-			}
-		]
+		eps:
+			在 {$RGP} = simple 的时候返回
+				count: 集数的总计，在 {$RGP} = simple 的时候返回
+			在 {$RGP} = large 的时候返回
+				[
+					{
+						id: 集ID
+						url: 集URL
+						type: 类型（目前只见到过0）
+						sort: 集编号（序号，对应第N集，以1开始）
+						name: 该集名称（原）
+						name_cn: 该集名称（中）
+						duration: 时长（字符串，格式：MM:ss）
+						airdate: 放送日
+						comment: 评论数
+						desc: 介绍
+						status: 放映状况
+							Air - 已放送
+							NA - 未放送
+							Today - 正在放送
+					}
+				]
 		air_date: 首映日期
 		air_weekday: 放映日（见上 1-7为周一-周日）
 		images: { large,common,medium,small,grid : 缩略图URI }
 		collection: { wish,collect,doing,on_hold,dropped : 收集信息（见上3）}
-		crt: [
-			{
-				id: 角色词条ID
-				url: 角色URL
-				name: 角色姓名
-				name_cn: 角色姓名（汉化）
-				role_name: 角色类型字符串（主角、配角等等）
-				images: { large,medium,grid,small : 缩略图 }
-				comment: 评论数目
-				collects: 收藏人数
-				info: {
-					name_cn: 角色姓名（汉化）
-					alias: {
-						kana: 别名（假名）
-					}
-					gender: 性别（男，女）
-					bloodtype,height,weight,bwh: 血型、身高、体重、三围
-					source: 信息来源
-				}
-				actors: [
+		crt: 
+			在 {$RGP} = simple 的时候返回
+				undefined: {$RGP} = simple 时不返回此字段
+			在 {$RGP} = large 的时候返回
+				[
 					{
-						id: （配音）演员ID
-						url: （配音）演员资料URL
-						name: （配音）演员姓名
-						images: { large,medium,small,grid : 缩略图}
+						id: 角色词条ID
+						url: 角色URL
+						name: 角色姓名
+						name_cn: 角色姓名（汉化）
+						role_name: 角色类型字符串（主角、配角等等）
+						images: { large,medium,grid,small : 缩略图 }
+						comment: 评论数目
+						collects: 收藏人数
+						info: {
+							name_cn: 角色姓名（汉化）
+							alias: {
+								kana: 别名（假名）
+							}
+							gender: 性别（男，女）
+							bloodtype,height,weight,bwh: 血型、身高、体重、三围
+							source: 信息来源
+						}
+						actors: [
+							{
+								id: （配音）演员ID
+								url: （配音）演员资料URL
+								name: （配音）演员姓名
+								images: { large,medium,small,grid : 缩略图}
+							}
+						]
 					}
 				]
-			}
-		]
-		staff:[
-			{
-				id: 制作者ID
-				url: 制作者资料页
-				name: 制作者名称
-				name_cn: 中文的名称
-				role_name: 扮演的制作团队角色
-				images: { 缩略图 }
-				comment: 评论数目
-				collects: 收藏数目
-				info: {
-					参考CRT的 INFO 区域
-				}
-				jobs: [
-					"原作","监督" 。。。等等
+		staff:
+			在 {$RGP} = simple 的时候返回
+				undefined: {$RGP} = simple 时不返回此字段
+			在 {$RGP} = large 的时候返回
+				[
+					{
+						id: 制作者ID
+						url: 制作者资料页
+						name: 制作者名称
+						name_cn: 中文的名称
+						role_name: 扮演的制作团队角色
+						images: { 缩略图 }
+						comment: 评论数目
+						collects: 收藏数目
+						info: {
+							参考CRT的 INFO 区域
+						}
+						jobs: [
+							"原作","监督" 。。。等等
+						]
+					}
 				]
-			}
-		]
-		topic:[
-			{
-				id: 讨论板主题ID
-				url: 讨论板主题URL
-				main_id: 讨论板ID
-				timestamp: 时间
-				lastpost: 最后回复时间
-				replies: 回复数量
-				user: { id,url,username,nickname,avatar,sign : 发帖用户数据，参考/auth返回 }
-			}
-		]
-		blog:[
-			{
-				id: 博客文ID
-				url: 文章URL
-				title: 文章标题
-				summary: 文章简介
-				image: { 缩略图 }
-				replies: 回复数
-				timestamp: 发帖时间
-				dateline: 日期 Y-m-d H:i 格式
-				user: { id,url,username,nickname,avatar,sign : 用户数据 }
-			}
-		]
+		topic:
+			在 {$RGP} = simple 的时候返回
+				undefined: {$RGP} = simple 时不返回此字段
+			在 {$RGP} = large 的时候返回
+				[
+					{
+						id: 讨论板主题ID
+						url: 讨论板主题URL
+						main_id: 讨论板ID
+						timestamp: 时间
+						lastpost: 最后回复时间
+						replies: 回复数量
+						user: { id,url,username,nickname,avatar,sign : 发帖用户数据，参考/auth返回 }
+					}
+				]
+		blog:
+			在 {$RGP} = simple 的时候返回
+				undefined: {$RGP} = simple 时不返回此字段
+			在 {$RGP} = large 的时候返回
+				[
+					{
+						id: 博客文ID
+						url: 文章URL
+						title: 文章标题
+						summary: 文章简介
+						image: { 缩略图 }
+						replies: 回复数
+						timestamp: 发帖时间
+						dateline: 日期 Y-m-d H:i 格式
+						user: { id,url,username,nickname,avatar,sign : 用户数据 }
+					}
+				]
 	}
 	
 6. 获取收藏信息
-[GET] /collection/{$ID}
+[GET] /collection/{$ID}?source=onAir
 	{$ID} = 番组ID
+	{$APP_NAME} = onAir ！注意此处必须使用onAir否则会返回 Unauthorized 错误！
 	
 	[返回信息]
 	格式：JSON
@@ -304,7 +334,37 @@
 			id, url, username, nickname, avatar sign: 见 /auth 部分
 		}
 	}
-7. 设置收藏信息
+	
+7. 根据名称搜索词条
+[GET] /search/subject/{$QUERY}?responseGroup={$RGP}&max_results={$LIMIT_END}&start={$LIMIT_START}
+	{$QUERY} = 搜索的字符串
+	{$RGP} = 参考 /subject/{$ID}
+	{$LIMIT_END} = 最后一条记录的位置
+	{$LIMIT_START} = 第一条记录的位置（这两个用于分页），一次区间建议不要超过20
+	
+	[返回信息]
+	格式：JSON
+	{
+		results: 返回结果的实际数量
+		list:[
+			{
+				里面内容同 /subject/{$ID} 返回的Object
+				根据 {$RGP} 不同，详细程度也不同
+			}
+		]
+	}
+
+8. 获取消息数量
+!(需要认证信息
+[GET] /notify/count
+
+	[返回信息]
+	格式：JSON
+	{
+		count: 你的信消息提醒数目
+	}
+
+9. 设置收藏信息
 [POST] /collection/{$ID}/update
 	[POST信息]
 		认证头
@@ -320,7 +380,7 @@
 			wish = 想看
 			collect = 看过
 
-8. 设置追番进度
+10. 设置追番进度
 [POST] /ep/{$EPID}/{$STATUS_URL}
 	{$EPID} = 该集的 ID，在 collection 和 subject 下都可查询
 	{$STATUS_URL} = 状态URL后缀，
