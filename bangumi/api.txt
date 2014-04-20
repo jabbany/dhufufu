@@ -381,12 +381,13 @@
 			collect = 看过
 
 10. 设置追番进度
-[POST] /ep/{$EPID}/{$STATUS_URL}
+[POST] /ep/{$EPID}/status/{$STATUS_URL}?source=onAir
 	{$EPID} = 该集的 ID，在 collection 和 subject 下都可查询
 	{$STATUS_URL} = 状态URL后缀，
 		watched = 看过
 		drop = 弃番
 		queue = 想看
+	{$APP_NAME} = onAir ！注意此处必须使用onAir否则会返回 Unauthorized 错误！
 		
 	[POST信息]
 		认证头
