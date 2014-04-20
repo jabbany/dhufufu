@@ -152,4 +152,13 @@ function BangumiCore(){
 	this.clearAuth = function(clearSettings){
 		//Clear the auth data
 	};
+	
+	this.setGlobalGet = function(key, value){
+		globalGet[key] = value;
+		return;
+	};
+	
+	this.getGlobalGet = function(key){
+		return globalGet[key];
+	};
 }
