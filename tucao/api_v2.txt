@@ -1,0 +1,119 @@
+只支持 GET 方法请求数据。
+用 UTF-8 编码进行数据传输，返回的数据也是 UTF-8 编码的。
+======================================================================================
+公共参数：
+	type	 输出方式（默认json，可选xml）
+	apikey	 你的APIKEY
+通用错误:
+	code		 -400 提交信息错误，具体内容在msg内 -403 apikey错误
+
+--------------------------------------------------------------------------------------
+获得视频相关信息:
+	API地址 http://www.tucao.cc/api_v2/view.php
+	hid	视频id
+
+	返回：
+	code		200
+	result		结果集
+	result结果集内容：
+	title		视频名称
+	play		播放数
+	mukio		弹幕数
+	creat		发布时间
+	thumb		缩略图
+	typename	分类名
+	typeid		分类id
+	description 	介绍
+	user		发布人
+	userid		发布人uid
+	keywords	关键词
+	part		分P数量
+	video		分P视频信息
+
+--------------------------------------------------------------------------------------
+获得分区内的视频列表
+	API地址 http://www.tucao.cc/api_v2/list.php
+	tid		分类id
+	page  		分页选择（默认第一页）
+	pagesize	返回记录数 （默认10）
+	order  		排序内容(默认date(发布时间), 可选mukio(弹幕数)/views（播放数）)
+
+	返回
+	total_count	当前分类合计视频数
+	result		结果集
+
+	result结果集内容：
+	title		视频名称
+	play		播放数
+	mukio		弹幕数
+	creat		发布时间
+	thumb		缩略图
+	typename	分类名
+	typeid		分类id
+	description 	介绍
+	user		发布人
+	userid		发布人uid
+	keywords	关键词
+	part		分P数量
+	video		分P视频信息
+
+--------------------------------------------------------------------------------------
+获取排行列表：
+	API地址 http://www.tucao.cc/api_v2/rank.php
+	tid		分类id  不支持子分类
+	date		0（每日）1（本周）2（本月）
+
+	返回
+	total_count	当前分类合计视频数
+	result		结果集
+
+	result结果集内容：
+	title		视频名称
+	play		播放数
+	mukio		弹幕数
+	creat		发布时间
+	thumb		缩略图
+	typename	分类名
+	typeid		分类id
+	description 	介绍
+	user		发布人
+	userid		发布人uid
+	keywords	关键词
+	part		分P数量
+	video		分P视频信息
+--------------------------------------------------------------------------------------
+搜索：
+	API地址 http://www.tucao.cc/api_v2/search.php
+	tid		分类id（可选）
+	page  		分页选择（默认第一页）
+	pagesize	返回记录数 （默认10）
+	order  		排序内容(默认date(发布时间), 可选mukio(弹幕数)/views（播放数）)
+	q		关键词
+	返回
+	total_count	当前分类合计视频数
+	result		结果集
+
+	result结果集内容：
+	title		视频名称
+	play		播放数
+	mukio		弹幕数
+	creat		发布时间
+	thumb		缩略图
+	typename	分类名
+	typeid		分类id
+	description 	介绍
+	user		发布人
+	userid		发布人uid
+	keywords	关键词
+	part		分P数量
+	video		分P视频信息
+--------------------------------------------------------------------------------------
+弹幕信息获得地址<xml>:
+http://www.tucao.cc/index.php?m=mukio&c=index&a=init&playerID=11-<hid>-1-<part>&r=<随机数>
+
+--------------------------------------------------------------------------------------
+视频获取地址<xml>:
+http://www.tucao.cc/api_v2/playurl.php?type=<sina?youku?qq?>&vid=<vid>&apikey=<apikey>[&q=2](优酷高清 可选)
+返回播放器xml
+notice:
+由于技术原因 QQ源有部分视频暂时无法获取到flv时间

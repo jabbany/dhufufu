@@ -1,0 +1,59 @@
+API地址：http://www.tucao.cc/api_v1/
+
+构造示例： http://www.tucao.cc/api_v1/?apikey=[apikey]&action=get_video&cat=11&id=8040
+
+======================================================================================
+公共参数：
+	charset  输出编码（默认utf-8）
+	type	 输出方式（默认json，可选xml）
+	action   执行的API操作
+	apikey	 你的APIKEY
+
+--------------------------------------------------------------------------------------
+get_video
+获得视频相关信息
+
+	id	去掉catid的视频id
+	cat	分类id
+
+	返回：
+	title		视频名称
+	thumb		缩略图
+	keywords	关键字
+	description 	介绍
+	username	发布人
+	content 	介绍内容
+	source		播放器信息
+
+弹幕信息获得地址<xml>:
+http://www.tucao.cc/index.php?m=mukio&c=index&a=init&playerID=<播放ID>&r=<随机数>
+播放ID构成是：catid-id-1-part
+比如h2818484 那么就可以写：
+http://www.tucao.cc/index.php?m=mukio&c=index&a=init&playerID=28-18484-1-0&r=294
+
+--------------------------------------------------------------------------------------
+video_list
+获得分区内的视频列表
+
+	cat	分类id
+	start  开始序号(默认0)
+	length 输出长度(默认20)
+	order  排序内容(默认id, 可选inputtime/updatetime)
+	order_desc   排序方式(默认desc倒序,可选asc正序)
+
+	返回
+	code		200正确固定
+	total_count	当前分类合计视频数
+	result		结果集
+
+	result结果集内容：
+	title		标题
+	id		去掉catid的视频id
+	catid		分类id
+	thumb		缩略图
+	keywords	关键字
+	description	介绍
+	url		游览器地址
+	username	发布人
+	inputtime	录入时间戳
+	updatetime	更新时间戳
