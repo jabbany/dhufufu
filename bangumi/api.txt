@@ -116,7 +116,7 @@
 				url: 链接到番剧的URL
 				type: 番剧类型（2=二次元番？）
 				name: 番剧名称（日文たぶん）
-				name_chn: 番剧汉化名（可能与name同）
+				name_cn: 番剧汉化名（可能与name同）
 				summary: 番剧介绍
 				eps: 集数
 				air_date: 放映开始日期
