@@ -172,7 +172,7 @@
 		]
 	}
 	
-5.获取番组信息
+5.获取番组/专题信息
 [GET] /subject/{$ID}?responseGroup={$RGP}
 	{$ID} = 番组ID，见上面
 	{$RGP} = 返回详细程度
@@ -184,7 +184,13 @@
 	{
 		id: 番组ID {$ID}
 		url: 番组URL
-		type: 番组类型（2为二次元番？期刊？未研究）
+		type: 专题类型
+			1 漫画/小说
+			2 动画/二次元番
+			3 音乐
+			4 游戏
+			6 三次元番
+		summary: 简介
 		name: 名称（原）
 		name_cn: 名称（中）
 		eps:
@@ -405,3 +411,28 @@
 		code: HTTP返回代码，200为成功
 		error: 错误的描述，没错误的话是 "OK"
 	}
+
+11. 每周放送列表
+[GET] /calendar
+
+	[返回信息]
+	格式：JSON
+	[
+		{
+			weekday: {
+				cn: 中文星期名 [ 星期一 ... 星期日 ]
+				en: 英语星期名 [ Mon ... Sun ]
+				id: 1-7 对应周一到周日
+				jp: 日语星期名 [ 月曜日 ... 日曜日 ]
+			}
+			items : [
+				{
+					air_date, air_weekday, collection, eps, images, name, name_cn, type, url: 
+						参考(5)获取番组信息在{$RGP=simple}时得到的结果。
+						注意：即便对这个API给出responseGroup={$RGP}参数，仍然无法诱发获取 {$RGP=large} 的 subject 结果
+						目前还有观察到 type, summary 等一些字段有时无法正确返回，使用者最好先行检查
+				}
+			]
+		}
+		...一共7个条目对应每个日期...
+	]
