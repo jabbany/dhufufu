@@ -1,3 +1,9 @@
+正规API
+======
+2018年2月 Bangumi 开放开发平台和[正式API](https://github.com/bangumi/api)
+
+本文档不再进行维护，请按照官方给出的方法正确使用正规API
+
 自解析Bangumi API
 ======
 该文档不是一个定义性文档！不保证准确，很多是猜的。

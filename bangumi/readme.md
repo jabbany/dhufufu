@@ -1,10 +1,8 @@
 Bangumi API 拆解
 ====
-API 评价：C4
+API 评价：A1
 
-附加信息：api.txt 里面的内容为自行研发，由于API未公开所以里面
-提到的内容可能随时发生变更。有内部更改的话，此文当未必能反映最新情况。
+2018年2月官方提供正规API并且文档在这里[bangumi/api](https://github.com/bangumi/api)
+请使用正规API
 
-如果有出现API不能使用等情况，可开 Support Ticket。
-
-新年开放API定义，如有使用请务必在此项目下登记。
+附加信息：api.txt 里面的内容为自行研发的API（基于OnAir），在官方API公布后不再继续维护。
